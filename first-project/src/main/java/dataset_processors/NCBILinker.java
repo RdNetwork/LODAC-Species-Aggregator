@@ -16,13 +16,20 @@ import java.util.ArrayList;
 
 import dataset_models.NCBI;
 import dataset_models.NCBI.Citation;
+import wikidata.examples.ExampleHelpers;
 
 public class NCBILinker extends Linker<NCBI> {
 
+
+	static final String DB_HOST = ExampleHelpers.loadProp("host");
+	static final String DB_USER = ExampleHelpers.loadProp("user");
+	static final String DB_PASS = ExampleHelpers.loadProp("password");
+	
+	
 	/*
 	 * Method to query the NCBI entity using MySQL with the NCBI taxonomy
 	 * database deployed
-	 */
+	 */	
 	@Override
 	public NCBI get(int id) {
 		NCBI entity = new NCBI();
@@ -35,8 +42,7 @@ public class NCBILinker extends Linker<NCBI> {
 			entity.setId(id);
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn;
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/ncbi_taxonomy", "rd", "RvLidS57");
+			conn = DriverManager.getConnection(DB_HOST, DB_USER, DB_PASS);
 
 			conn.setCatalog("ncbi_taxonomy");
 
@@ -110,6 +116,7 @@ public class NCBILinker extends Linker<NCBI> {
 		return entity;
 
 	}
+
 
 	@Override
 	public void write(NCBI NCBIItem, String path) {

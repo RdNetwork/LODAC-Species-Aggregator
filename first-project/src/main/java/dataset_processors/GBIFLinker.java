@@ -26,6 +26,7 @@ import dataset_models.GBIF.Multimedia;
 import dataset_models.GBIF.Reference;
 import dataset_models.GBIF.Taxon;
 import dataset_models.GBIF.VernacularName;
+import wikidata.processors.RdfProcessor;
 
 public class GBIFLinker extends Linker<GBIF> {
 
@@ -33,7 +34,7 @@ public class GBIFLinker extends Linker<GBIF> {
 
 	public static void init() {
 		File myArchiveFile = new File(
-				"D:/shared_with_vm/dump/gbif/backbone-current/");
+				RdfProcessor.dumpPath + "gbif/backbone-current/");
 		try {
 			dwcArchive = ArchiveFactory.openArchive(myArchiveFile);
 		} catch (UnsupportedArchiveException | IOException e) {

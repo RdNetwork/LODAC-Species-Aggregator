@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import dataset_models.Dyntaxa;
 import dataset_models.Dyntaxa.Synonym;
+import wikidata.processors.RdfProcessor;
 
 public class DyntaxaLinker extends Linker<Dyntaxa> {
 
@@ -33,7 +34,7 @@ public class DyntaxaLinker extends Linker<Dyntaxa> {
 
 		try {
 			pkg = OPCPackage
-					.open(new File("D:/shared_with_vm/dump/dyntaxa/Biota.xlsx"));
+					.open(new File(RdfProcessor.dumpPath + "dyntaxa/Biota.xlsx"));
 			wb = new XSSFWorkbook(pkg);
 		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block

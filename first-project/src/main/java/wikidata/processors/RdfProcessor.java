@@ -1,14 +1,17 @@
 package wikidata.processors;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.apache.jena.query.Dataset;
 import org.json.JSONException;
@@ -44,9 +47,12 @@ import wikidata.examples.ExampleHelpers;
 
 public class RdfProcessor implements EntityDocumentProcessor {
 
+	
 	static Dataset dataset;
-	final static String storePath = "rdf/store/";
+	public final static String storePath = "rdf/store/";
+	public final static String dumpPath = ExampleHelpers.loadProp("dumplocation"); 
 	int progress = 0, progressBio = 0;
+
 
 	/**
 	 * Main method. Processes the whole dump using this processor and writes the

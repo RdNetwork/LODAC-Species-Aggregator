@@ -1,5 +1,7 @@
 package wikidata.examples;
 
+import java.io.FileInputStream;
+
 /*
  * #%L
  * Wikidata Toolkit Examples
@@ -22,10 +24,12 @@ package wikidata.examples;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -43,6 +47,7 @@ import org.wikidata.wdtk.dumpfiles.DumpContentType;
 import org.wikidata.wdtk.dumpfiles.DumpProcessingController;
 import org.wikidata.wdtk.dumpfiles.EntityTimerProcessor;
 import org.wikidata.wdtk.dumpfiles.EntityTimerProcessor.TimeoutException;
+
 import org.wikidata.wdtk.dumpfiles.MwDumpFile;
 
 /**
@@ -311,5 +316,22 @@ public class ExampleHelpers {
 			}
 		}
 		return false;
+	}
+	
+	
+	public static String loadProp(String propName) {
+		
+		Properties prop = new Properties();
+		
+		try {
+			InputStream input = new FileInputStream("config.properties");
+			prop.load(input);
+			return prop.getProperty(propName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
 	}
 }
