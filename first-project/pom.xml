@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.wikidata.extraction</groupId>
+	<artifactId>first-project</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<wikidataToolkitVersion>0.6.0</wikidataToolkitVersion>
+	</properties>
+	<repositories>
+		<repository>
+			<id>gbif-repository</id>
+			<url>http://repository.gbif.org/content/groups/gbif</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+
+
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>apache-jena-libs</artifactId>
+			<type>pom</type>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wikidata.wdtk</groupId>
+			<artifactId>wdtk-datamodel</artifactId>
+			<version>${wikidataToolkitVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wikidata.wdtk</groupId>
+			<artifactId>wdtk-dumpfiles</artifactId>
+			<version>${wikidataToolkitVersion}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wikidata.wdtk</groupId>
+			<artifactId>wdtk-rdf</artifactId>
+			<version>${wikidataToolkitVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>jena-tdb</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wikidata.wdtk</groupId>
+			<artifactId>wdtk-wikibaseapi</artifactId>
+			<version>${wikidataToolkitVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gbif</groupId>
+			<artifactId>dwca-io</artifactId>
+			<version>1.23</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<!-- Used to set JRE version; will be used by IDEs like Eclipse as the 
+					target JRE (default is 1.5) -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
