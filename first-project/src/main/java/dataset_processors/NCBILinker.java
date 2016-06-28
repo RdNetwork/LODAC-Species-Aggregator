@@ -130,32 +130,32 @@ public class NCBILinker extends Linker<NCBI> {
 
 			w.println("\t" + entity);
 			Linker.printPropertyValue(w, 2, "ncbi:scientificName",
-					NCBIItem.getScientificName(), false, false);
+					NCBIItem.getScientificName(), false,false, false);
 			Linker.printPropertyValue(w, 2, "ncbi:completeName",
-					NCBIItem.getCompleteName(), false, false);
-			Linker.printPropertyValue(w, 2, "ncbi:rank", NCBIItem.getRank(), false, false);
+					NCBIItem.getCompleteName(),false, false, false);
+			Linker.printPropertyValue(w, 2, "ncbi:rank", NCBIItem.getRank(),false, false, false);
 			Linker.printPropertyValue(w, 2, "ncbi:parentID", NCBIItem.getParentId(),
-					false, false);
+					false,false, false);
 
 			if (NCBIItem.getCommonNames() != null) {
 				for (String commonName : NCBIItem.getCommonNames()) {
 					Linker.printPropertyValue(w, 2, "ncbi:commonName", commonName,
-							false, false);
+							false,false, false);
 				}
 			}
 
 			if (NCBIItem.getSynonyms() != null) {
 				for (String syn : NCBIItem.getSynonyms()) {
-					Linker.printPropertyValue(w, 2, "ncbi:synonym", syn, false, false);
+					Linker.printPropertyValue(w, 2, "ncbi:synonym", syn,false, false, false);
 				}
 			}
 
 			if (NCBIItem.getCitations() != null) {
 				for (Citation cit : NCBIItem.getCitations()) {
 					w.println("\t\tncbi:citation [");
-					Linker.printPropertyValue(w, 3, "ncbi:cit_key", cit.key, false, false);
-					Linker.printPropertyValue(w, 3, "ncbi:cit_url", cit.url, false, false);
-					Linker.printPropertyValue(w, 3, "ncbi:cit_text", cit.text, true, false);
+					Linker.printPropertyValue(w, 3, "ncbi:cit_key", cit.key, true, false, false);
+					Linker.printPropertyValue(w, 3, "ncbi:cit_url", cit.url, true, false, false);
+					Linker.printPropertyValue(w, 3, "ncbi:cit_text", cit.text, true, true, false);
 					w.println("\t\t] ;");
 				}
 			}
@@ -163,13 +163,13 @@ public class NCBILinker extends Linker<NCBI> {
 			if (NCBIItem.getGenCode() != null) {
 				w.println("\t\tncbi:gencode [");
 				Linker.printPropertyValue(w, 3, "ncbi:gencode_abbrev",
-						NCBIItem.getGenCode().abbrev, false, false);
+						NCBIItem.getGenCode().abbrev, true, false, false);
 				Linker.printPropertyValue(w, 3, "ncbi:gencode_name",
-						NCBIItem.getGenCode().name, false, false);
+						NCBIItem.getGenCode().name, true, false, false);
 				Linker.printPropertyValue(w, 3, "ncbi:gencode_transtable",
-						NCBIItem.getGenCode().transTable, false, false);
+						NCBIItem.getGenCode().transTable, true, false, false);
 				Linker.printPropertyValue(w, 3, "ncbi:gencode_startcodons",
-						NCBIItem.getGenCode().startCodons, true, false);
+						NCBIItem.getGenCode().startCodons, true, true, false);
 				w.println("\t\t] .");
 			}
 

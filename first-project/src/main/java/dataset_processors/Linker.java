@@ -22,7 +22,7 @@ public abstract class Linker<T> {
 	 *            : does it need quote-escaping?)
 	 */
 	public static boolean printPropertyValue(PrintWriter w, int i, String property,
-			String value, boolean end, boolean linked) {
+			String value, boolean collection, boolean end, boolean linked) {
 
 		if (value != null) {
 			// Tabulations
@@ -44,7 +44,11 @@ public abstract class Linker<T> {
 			}
 
 			if (end) {
-				w.print(" .\n");
+				if (collection) {
+					w.print(" \n");
+				} else {
+					w.print(" .\n");
+				}
 			} else {
 				w.print(" ;\n");
 			}

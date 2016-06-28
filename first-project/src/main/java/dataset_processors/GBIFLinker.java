@@ -174,45 +174,45 @@ public class GBIFLinker extends Linker<GBIF> {
 			w.println("\t" + entity);
 			w.println("\t\tdwc:Taxon [");
 			Linker.printPropertyValue(w, 3, "dwc:taxonID",
-					gbifItem.getTaxon().taxonID, false, false);
+					gbifItem.getTaxon().taxonID, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:datasetID",
-					gbifItem.getTaxon().datasetID, false, false);
+					gbifItem.getTaxon().datasetID, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID",
-					gbifItem.getTaxon().parentNameUsageID, false, false);
+					gbifItem.getTaxon().parentNameUsageID, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:acceptedNameUsageID",
-					gbifItem.getTaxon().acceptedNameUsageID, false, false);
+					gbifItem.getTaxon().acceptedNameUsageID, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:originalNameUsageID",
-					gbifItem.getTaxon().originalNameUsageID, false, false);
+					gbifItem.getTaxon().originalNameUsageID, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:scientificName",
-					gbifItem.getTaxon().scientificName, false, false);
+					gbifItem.getTaxon().scientificName, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:taxonRank",
-					gbifItem.getTaxon().taxonRank, false, false);
+					gbifItem.getTaxon().taxonRank, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:nameAccordingTo",
-					gbifItem.getTaxon().nameAccordingTo, false, false);
+					gbifItem.getTaxon().nameAccordingTo, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:namePublishedIn",
-					gbifItem.getTaxon().namePublishedIn, false, false);
+					gbifItem.getTaxon().namePublishedIn, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:taxonomicStatus",
-					gbifItem.getTaxon().taxonomicStatus, false, false);
+					gbifItem.getTaxon().taxonomicStatus, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:nomenclaturalStatus",
-					gbifItem.getTaxon().nomenclaturalStatus, false, false);
+					gbifItem.getTaxon().nomenclaturalStatus, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:kingdom",
-					gbifItem.getTaxon().kingdom, false, false);
+					gbifItem.getTaxon().kingdom, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:phylum", gbifItem.getTaxon().phylum,
-					false, false);
+					 true,false, false);
 			Linker.printPropertyValue(w, 3, "dwc:class",
-					gbifItem.getTaxon().taxonClass, false, false);
+					gbifItem.getTaxon().taxonClass, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:order", gbifItem.getTaxon().order,
-					false, false);
+					 true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:family", gbifItem.getTaxon().family,
-					false, false);
+					 true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:genus", gbifItem.getTaxon().genus,
-					false, false);
+					 true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:taxonRemarks",
-					gbifItem.getTaxon().taxonRemarks, false, false);
+					gbifItem.getTaxon().taxonRemarks, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:taxonRank",
-					gbifItem.getTaxon().taxonRank, false, false);
+					gbifItem.getTaxon().taxonRank, true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID ",
-					gbifItem.getTaxon().parentNameUsageID, true, false);
+					gbifItem.getTaxon().parentNameUsageID, true, true, false);
 
 			char endChar = (gbifItem.getVernacularNames() == null) ? '.' : ';';
 			w.println("\t\t] " + endChar);
@@ -226,17 +226,17 @@ public class GBIFLinker extends Linker<GBIF> {
 					num++;
 					w.println("\t\tgbif:vernacularName [");
 					Linker.printPropertyValue(w, 3, "dwc:lifeStage", vn.lifeStage,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dwc:sex", vn.sex, false, false);
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dwc:sex", vn.sex, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:vernacularName",
-							vn.vernacularName, false, false);
+							vn.vernacularName, true, false, false);
 					Linker.printPropertyValue(w, 3, "dc:language", vn.language,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dc:source", vn.source, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dc:source", vn.source, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dwc:countryCode",
-							vn.countryCode, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:country", vn.country, true,
+							vn.countryCode, true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:country", vn.country, true, true,
 							false);
 					boolean last = (num == gbifItem.getVernacularNames().size());
 					w.println("\t\t] " + (last ? endChar : ';'));
@@ -250,25 +250,25 @@ public class GBIFLinker extends Linker<GBIF> {
 					num++;
 					w.println("\t\tgbif:Distribution [");
 					Linker.printPropertyValue(w, 3, "dwc:countryCode", d.countryCode,
-							false, false);
+							 true,false, false);
 					Linker.printPropertyValue(w, 3, "dwc:lifeStage", d.lifeStage,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dwc:country", d.country, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dwc:country", d.country, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dwc:locationID", d.locationID,
-							false, false);
+							 true,false, false);
 					Linker.printPropertyValue(w, 3, "dwc:establishmentMeans",
-							d.establishmentMeans, false, false);
+							d.establishmentMeans, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:locality", d.locality,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dc:source", d.source, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dc:source", d.source, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "iucn:threatStatus",
-							d.threatStatus, false, false);
+							d.threatStatus, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:locationRemarks",
-							d.locationRemarks, false, false);
+							d.locationRemarks, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:occurrenceStatus",
-							d.occurrenceStatus, true, false);
+							d.occurrenceStatus, true, true, false);
 
 					if (num == gbifItem.getMultimediaFiles().size()) {
 						endChar = '.';
@@ -285,28 +285,28 @@ public class GBIFLinker extends Linker<GBIF> {
 				for (Multimedia m : gbifItem.getMultimediaFiles()) {
 					num++;
 					w.println("\t\tgbif:Multimedia [");
-					Linker.printPropertyValue(w, 3, "dc:title", m.title, false,
+					Linker.printPropertyValue(w, 3, "dc:title", m.title, true, false,
 							false);
-					Linker.printPropertyValue(w, 3, "dc:license", m.license, false,
+					Linker.printPropertyValue(w, 3, "dc:license", m.license, true, false,
 							false);
-					Linker.printPropertyValue(w, 3, "dc:creator", m.creator, false,
+					Linker.printPropertyValue(w, 3, "dc:creator", m.creator, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dc:references", m.references,
-							false, false);
+							 true,false, false);
 					Linker.printPropertyValue(w, 3, "dc:contributor", m.contributor,
-							false, false);
+							 true,false, false);
 					Linker.printPropertyValue(w, 3, "dc:description", m.description,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dc:source", m.source, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dc:source", m.source, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dc:identifier", m.identifier,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dc:created", m.created, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dc:created", m.created, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dc:publisher", m.publisher,
-							false, false);
+							 true,false, false);
 					Linker.printPropertyValue(w, 3, "dc:rightsHolder",
-							m.rightsHolder, true, false);
+							m.rightsHolder, true, true, false);
 
 					if (num == gbifItem.getReferences().size()) {
 						endChar = '.';
@@ -324,13 +324,13 @@ public class GBIFLinker extends Linker<GBIF> {
 					num++;
 					w.println("\t\tgbif:Reference [");
 					Linker.printPropertyValue(w, 3, "dc:bibliographicCitation",
-							r.bibliographicCitation, false, false);
+							r.bibliographicCitation, true, false, false);
 					Linker.printPropertyValue(w, 3, "dc:references", r.references,
-							false, false);
-					Linker.printPropertyValue(w, 3, "dc:source", r.source, false,
+							 true,false, false);
+					Linker.printPropertyValue(w, 3, "dc:source", r.source, true, false,
 							false);
 					Linker.printPropertyValue(w, 3, "dc:identifier", r.identifier,
-							true, false);
+							 true,true, false);
 
 					if (num == gbifItem.getReferences().size()) {
 						endChar = '.';

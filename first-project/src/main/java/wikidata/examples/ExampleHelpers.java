@@ -114,7 +114,7 @@ public class ExampleHelpers {
 		String pattern = "%d{yyyy-MM-dd HH:mm:ss} %-5p - %m%n";
 		consoleAppender.setLayout(new PatternLayout(pattern));
 		// Change to Level.ERROR for fewer messages:
-		consoleAppender.setThreshold(Level.ALL);
+		consoleAppender.setThreshold(Level.INFO);
 
 		consoleAppender.activateOptions();
 		Logger.getRootLogger().addAppender(consoleAppender);
@@ -324,7 +324,7 @@ public class ExampleHelpers {
 		Properties prop = new Properties();
 		
 		try {
-			InputStream input = new FileInputStream("config.properties");
+			InputStream input = new FileInputStream("src/main/resources/config.properties");
 			prop.load(input);
 			return prop.getProperty(propName);
 		} catch (IOException e) {

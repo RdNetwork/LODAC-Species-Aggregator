@@ -93,15 +93,16 @@ public class EOLLinker extends Linker<EOL> {
 			w.println("\t" + entity);
 			w.println("\t\tdwc:Taxon [");
 			Linker.printPropertyValue(w, 3, "dwc:scientificName",
-					eolItem.getScientificName(), false, false);
+					eolItem.getScientificName(), true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:taxonRank", eolItem.getTaxonRank(),
-					false, false);
+					true, false, false);
 			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID",
-					eolItem.getParentId(), true, false);
-			char endChar = (eolItem.getVernacularNames() == null) ? '.' : ';';
+					eolItem.getParentId(), true, true, false);
+			char endChar = ( (eolItem.getVernacularNames() == null || eolItem.getVernacularNames().isEmpty()) &&
+					(eolItem.getMeasures() == null || eolItem.getMeasures().length == 0) ? '.' : ';');
 			w.println("\t\t] " + endChar);
 
-			endChar = (eolItem.getMeasures() == null) ? '.' : ';';
+			endChar = (eolItem.getMeasures() == null || eolItem.getMeasures().length == 0) ? '.' : ';';
 			int num = 0;
 
 			// Vernacular names node
@@ -110,11 +111,11 @@ public class EOLLinker extends Linker<EOL> {
 					num++;
 					w.println("\t\tgbif:vernacularName [");
 					Linker.printPropertyValue(w, 3, "dwc:vernacularName",
-							vernacularName.name, false, false);
+							vernacularName.name, true, false, false);
 					Linker.printPropertyValue(w, 3, "gbif:isPreferredName",
-							Boolean.toString(vernacularName.isPreferredName), false, false);
+							Boolean.toString(vernacularName.isPreferredName), true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:taxonID",
-							"http://eol.org/pages/" + eolItem.getId(), true, false);
+							"http://eol.org/pages/" + eolItem.getId(), true, true, false);
 					boolean last = (num == eolItem.getVernacularNames().size());
 					w.println("\t\t] " + (last ? endChar : ';'));
 				}
@@ -127,23 +128,23 @@ public class EOLLinker extends Linker<EOL> {
 					num++;
 					w.println("\t\tdwc:MeasurementOrFact [");
 					Linker.printPropertyValue(w, 3, "dwc:taxonID",
-							"http://eol.org/pages/" + eolItem.getId(), true, false);
-					Linker.printPropertyValue(w, 3, "dc:source", m.source, false, false);
+							"http://eol.org/pages/" + eolItem.getId(), true, false, false);
+					Linker.printPropertyValue(w, 3, "dc:source", m.source, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:measurementMethod", m.method,
-							false, false);
+							true, false, false);
 					Linker.printPropertyValue(w, 3, "dc:bibliographicCitation",
-							m.citation, false, false);
-					Linker.printPropertyValue(w, 3, "eol:terms/statisticalMethod",
-							m.statMethod, false, false);
-					Linker.printPropertyValue(w, 3, ":predicate", m.type, false, false);
+							m.citation, true, false, false);
+					Linker.printPropertyValue(w, 3, "eol_terms:statisticalMethod",
+							m.statMethod, true, false, false);
+					Linker.printPropertyValue(w, 3, ":predicate", m.type, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:measurementType", m.typeURI,
-							false, false);
-					Linker.printPropertyValue(w, 3, ":units", m.units, false, false);
+							true, false, false);
+					Linker.printPropertyValue(w, 3, ":units", m.units, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:measurementUnit", m.unitsURI,
-							false, false);
-					Linker.printPropertyValue(w, 3, ":value", m.value, false, false);
+							true, false, false);
+					Linker.printPropertyValue(w, 3, ":value", m.value, true, false, false);
 					Linker.printPropertyValue(w, 3, "dwc:measurementValue", m.valueURI,
-							true, false);
+							true, true, false);
 
 					if (num == eolItem.getMeasures().length) {
 						endChar = '.';

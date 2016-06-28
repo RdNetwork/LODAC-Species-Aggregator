@@ -163,23 +163,25 @@ public class DyntaxaLinker extends Linker<Dyntaxa> {
 				w.println("\t" + entity);
 
 				Linker.printPropertyValue(w, 2, "dynt:taxonRank",
-						dyntItem.getTaxonRank(), false, false);
+						dyntItem.getTaxonRank(), false, false, false);
 				Linker.printPropertyValue(w, 2, "dynt:scientificName",
-						dyntItem.getScientificName(), false, false);
+						dyntItem.getScientificName(), false, false, false);
 				Linker.printPropertyValue(w, 2, "dynt:author", dyntItem.getAuthor(),
-						false, false);
+						false, false, false);
 				Linker.printPropertyValue(w, 2, "dynt:GUID", dyntItem.getGUID(),
-						false, false);
+						false, false, false);
 				Linker.printPropertyValue(w, 2, "dynt:recommendedGUID",
-						dyntItem.getRecommendedGUID(), (syns.isEmpty()), false);
+						dyntItem.getRecommendedGUID(), false, (syns.isEmpty()), false);
 
 				if (!syns.isEmpty()) {
 					w.println("\t\tdynt:synonym [");
+					int p = 0;
 					for (Synonym synonym : syns) {
+						p++;
 						Linker.printPropertyValue(w, 3, "dynt:synonymName",
-								synonym.name, false, false);
+								synonym.name, true, false, false);
 						Linker.printPropertyValue(w, 3, "dynt:synonymOrigin",
-								synonym.origin, true, false);
+								synonym.origin, true, (p == syns.size()), false);
 					}
 					w.println("\t\t].");
 				}
