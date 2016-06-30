@@ -101,7 +101,7 @@ public class DyntaxaLinker extends Linker<Dyntaxa> {
 						// Column 6 : Recommended GUID/LSID
 						entity.setRecommendedGUID(getCellStringValue(row, 6));
 
-						// Column 8 : Syonyms searated by ";"
+						// Column 8 : Syonyms separated by ";"
 						cell = row.getCell(8);
 
 						if (cell != null && cell.getRichStringCellValue() != null) {

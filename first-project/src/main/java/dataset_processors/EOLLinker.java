@@ -31,8 +31,7 @@ public class EOLLinker extends Linker<EOL> {
 			// System.out.println(id);
 
 			String json = IOUtils.toString(
-					new URL("http://eol.org/api/traits/" + id
-							+ "?key=8829118179928b2fa26f116131b0acbfe10ce763"),
+					new URL("http://eol.org/api/traits/" + id + "?key=8829118179928b2fa26f116131b0acbfe10ce763"),
 					"UTF-8");
 			ctx = JsonPath.parse(json);
 
@@ -49,8 +48,7 @@ public class EOLLinker extends Linker<EOL> {
 			}
 
 			// Vernacular names
-			List<LinkedHashMap<String, Object>> names = ctx
-					.read("$.*[?(@.@type == 'gbif:VernacularName')]");
+			List<LinkedHashMap<String, Object>> names = ctx.read("$.*[?(@.@type == 'gbif:VernacularName')]");
 			ArrayList<VernacularName> nameNodes = new ArrayList<VernacularName>();
 			for (LinkedHashMap<String, Object> name : names) {
 				VernacularName vn = entity.fillName(name);
@@ -59,8 +57,7 @@ public class EOLLinker extends Linker<EOL> {
 			entity.setVernacularNames(nameNodes);
 
 			// Measurements
-			List<LinkedHashMap<String, String>> measurements = ctx
-					.read("$.*[?(@.@type == 'dwc:MeasurementOrFact')]");
+			List<LinkedHashMap<String, String>> measurements = ctx.read("$.*[?(@.@type == 'dwc:MeasurementOrFact')]");
 			ArrayList<Measurement> measures = new ArrayList<Measurement>();
 			for (LinkedHashMap<String, String> measure : measurements) {
 				Measurement m = entity.fillMeasure(measure);
@@ -82,26 +79,24 @@ public class EOLLinker extends Linker<EOL> {
 	@Override
 	public void write(EOL eolItem, String path) {
 
-		try (OutputStreamWriter osw = new OutputStreamWriter(
-				new FileOutputStream(path, true), "UTF-8");
+		try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(path, true), "UTF-8");
 				BufferedWriter bw = new BufferedWriter(osw);
 				PrintWriter w = new PrintWriter(bw)) {
 
-			String entity = "eol:" + eolItem.getId();
+			String entity = "eol_ent:" + eolItem.getId();
 
 			// Taxon node
 			w.println("\t" + entity);
-			w.println("\t\tdwc:Taxon [");
-			Linker.printPropertyValue(w, 3, "dwc:scientificName",
-					eolItem.getScientificName(), true, false, false);
-			Linker.printPropertyValue(w, 3, "dwc:taxonRank", eolItem.getTaxonRank(),
-					true, false, false);
-			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID",
-					eolItem.getParentId(), true, true, false);
-			char endChar = ( (eolItem.getVernacularNames() == null || eolItem.getVernacularNames().isEmpty()) &&
-					(eolItem.getMeasures() == null || eolItem.getMeasures().length == 0) ? '.' : ';');
-			w.println("\t\t] " + endChar);
-
+			char endChar;
+			if (eolItem.getId() != 0) {
+				w.println("\t\tdwc:Taxon [");
+				Linker.printPropertyValue(w, 3, "dwc:scientificName", eolItem.getScientificName(), true, false, false);
+				Linker.printPropertyValue(w, 3, "dwc:taxonRank", eolItem.getTaxonRank(), true, false, false);
+				Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID", eolItem.getParentId(), true, true, false);
+				endChar = ((eolItem.getVernacularNames() == null || eolItem.getVernacularNames().isEmpty())
+						&& (eolItem.getMeasures() == null || eolItem.getMeasures().length == 0) ? '.' : ';');
+				w.println("\t\t] " + endChar);
+			}
 			endChar = (eolItem.getMeasures() == null || eolItem.getMeasures().length == 0) ? '.' : ';';
 			int num = 0;
 
@@ -110,12 +105,11 @@ public class EOLLinker extends Linker<EOL> {
 				for (VernacularName vernacularName : eolItem.getVernacularNames()) {
 					num++;
 					w.println("\t\tgbif:vernacularName [");
-					Linker.printPropertyValue(w, 3, "dwc:vernacularName",
-							vernacularName.name, true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:vernacularName", vernacularName.name, true, false, false);
 					Linker.printPropertyValue(w, 3, "gbif:isPreferredName",
 							Boolean.toString(vernacularName.isPreferredName), true, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:taxonID",
-							"http://eol.org/pages/" + eolItem.getId(), true, true, false);
+					Linker.printPropertyValue(w, 3, "dwc:taxonID", "http://eol.org/pages/" + eolItem.getId(), true,
+							true, false);
 					boolean last = (num == eolItem.getVernacularNames().size());
 					w.println("\t\t] " + (last ? endChar : ';'));
 				}
@@ -127,24 +121,18 @@ public class EOLLinker extends Linker<EOL> {
 				for (Measurement m : eolItem.getMeasures()) {
 					num++;
 					w.println("\t\tdwc:MeasurementOrFact [");
-					Linker.printPropertyValue(w, 3, "dwc:taxonID",
-							"http://eol.org/pages/" + eolItem.getId(), true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:taxonID", "http://eol.org/pages/" + eolItem.getId(), true,
+							false, false);
 					Linker.printPropertyValue(w, 3, "dc:source", m.source, true, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:measurementMethod", m.method,
-							true, false, false);
-					Linker.printPropertyValue(w, 3, "dc:bibliographicCitation",
-							m.citation, true, false, false);
-					Linker.printPropertyValue(w, 3, "eol_terms:statisticalMethod",
-							m.statMethod, true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:measurementMethod", m.method, true, false, false);
+					Linker.printPropertyValue(w, 3, "dc:bibliographicCitation", m.citation, true, false, false);
+					Linker.printPropertyValue(w, 3, "eol_terms:statisticalMethod", m.statMethod, true, false, false);
 					Linker.printPropertyValue(w, 3, ":predicate", m.type, true, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:measurementType", m.typeURI,
-							true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:measurementType", m.typeURI, true, false, false);
 					Linker.printPropertyValue(w, 3, ":units", m.units, true, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:measurementUnit", m.unitsURI,
-							true, false, false);
+					Linker.printPropertyValue(w, 3, "dwc:measurementUnit", m.unitsURI, true, false, false);
 					Linker.printPropertyValue(w, 3, ":value", m.value, true, false, false);
-					Linker.printPropertyValue(w, 3, "dwc:measurementValue", m.valueURI,
-							true, true, false);
+					Linker.printPropertyValue(w, 3, "dwc:measurementValue", m.valueURI, true, true, false);
 
 					if (num == eolItem.getMeasures().length) {
 						endChar = '.';

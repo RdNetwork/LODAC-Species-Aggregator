@@ -1,6 +1,7 @@
 package wikidata.processors;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -183,19 +184,19 @@ public class RdfProcessor implements EntityDocumentProcessor {
 //				NCBI ncbiItem = linkNCBI.get(Integer.parseInt(ids.get(id)));
 //				linkNCBI.write(ncbiItem, storePath + "ncbi.trig");
 //				break;
-//			
-//			
-//			case "gbif_ent":
-//				GBIFLinker linkGBIF = new GBIFLinker();
-//				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
-//				linkGBIF.write(gbifItem, storePath + "gbif.trig");
-//				break;
-//				
-//			case "dynt":
-//				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
-//				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
-//				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
-//				break;
+			
+			
+			case "gbif_ent":
+				GBIFLinker linkGBIF = new GBIFLinker();
+				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
+				linkGBIF.write(gbifItem, storePath + "gbif.trig");
+				break;
+				
+			case "dynt":
+				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
+				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
+				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
+				break;
 
 //			case "feuro":
 //				break;
@@ -272,54 +273,42 @@ public class RdfProcessor implements EntityDocumentProcessor {
 	}
 
 	private static void initStore(String dataset) {
-		try (BufferedWriter writer = Files
-				.newBufferedWriter(Paths.get(storePath + dataset + ".trig"))) {
-			writer.write(
-					"@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .");
-			writer.newLine();
-			writer.write("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .");
-			writer.newLine();
-			writer.write("@prefix owl: <http://www.w3.org/2002/07/owl#> .");
-			writer.newLine();
-			writer.write("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
-			writer.newLine();
-			writer.write("@prefix wd: <http://www.wikidata.org/entity/> .");
-			writer.newLine();
-			writer.write("@prefix wdt: <http://www.wikidata.org/prop/direct/> .");
-			writer.newLine();
-			writer.write("@prefix gbif_ent: <http://www.gbif.org/species/> .");
-			writer.newLine();
-			writer.write("@prefix gbif: <http://rs.gbif.org/terms/1.0/> .");
-			writer.newLine();
-			writer.write("@prefix eol_terms: <http://eol.org/pages/schema/terms> .");
-			writer.newLine();
-			writer.write("@prefix eol_ent: <http://www.eol.org/pages/> .");
-			writer.newLine();
-			writer.write("@prefix eol: <http://eol.org/schema/> .");
-			writer.newLine();
-			writer.write("@prefix itis: <http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=> .");
-			writer.newLine();
-			writer.write(
-					"@prefix ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=> .");
-			writer.newLine();
-			writer.write("@prefix dwc: <http://rs.tdwg.org/dwc/terms/> .");
-			writer.newLine();
-			writer.write("@prefix dc: <http://purl.org/dc/terms/> .");
-			writer.newLine();
-			writer.write("@prefix iucn: <http://iucn.org/terms/> .");
-			writer.newLine();
-			writer.write(
-					"@prefix feuro: <http://www.faunaeur.org/full_results.php?id=> .");
-			writer.newLine();
-			writer.write("@prefix dynt: <https://www.dyntaxa.se/taxon/info/> .");
-			writer.newLine();
-			writer.write("@prefix lodac: <localhost/> .");
-			writer.newLine();
-			writer.write("@prefix : </> .");
-			writer.newLine();
+		File storeFile = new File(storePath + dataset + ".trig");
+		if(!storeFile.exists()) {
+			try {
+				storeFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		
+		try (OutputStreamWriter osw = new OutputStreamWriter(
+				new FileOutputStream(storeFile), "UTF-8");
+				BufferedWriter bw = new BufferedWriter(osw);
+				PrintWriter writer = new PrintWriter(bw))  {
+			writer.println("@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .");
+			writer.println("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .");
+			writer.println("@prefix owl: <http://www.w3.org/2002/07/owl#> .");
+			writer.println("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
+			writer.println("@prefix wd: <http://www.wikidata.org/entity/> .");
+			writer.println("@prefix wdt: <http://www.wikidata.org/prop/direct/> .");
+			writer.println("@prefix gbif_ent: <http://www.gbif.org/species/> .");
+			writer.println("@prefix gbif: <http://rs.gbif.org/terms/1.0/> .");
+			writer.println("@prefix eol_terms: <http://eol.org/pages/schema/terms> .");
+			writer.println("@prefix eol_ent: <http://www.eol.org/pages/> .");
+			writer.println("@prefix eol: <http://eol.org/schema/> .");
+			writer.println("@prefix itis: <http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=> .");
+			writer.println("@prefix ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=> .");
+			writer.println("@prefix dwc: <http://rs.tdwg.org/dwc/terms/> .");
+			writer.println("@prefix dc: <http://purl.org/dc/terms/> .");
+			writer.println("@prefix iucn: <http://iucn.org/terms/> .");
+			writer.println("@prefix feuro: <http://www.faunaeur.org/full_results.php?id=> .");
+			writer.println("@prefix dynt: <https://www.dyntaxa.se/taxon/info/> .");
+			writer.println("@prefix lodac: <http://localhost/> .");
+			writer.println("@prefix : </> .");
 			
-			writer.write("lodac:" + dataset + " {");
-			writer.newLine();
+			writer.println("lodac:" + dataset + " {");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -342,22 +331,23 @@ public class RdfProcessor implements EntityDocumentProcessor {
 	private static void initStores() {
 		initStore("wikidata");
 		initStore("eol");
-//		GBIFLinker.init();
-//		initStore("gbif");
+		GBIFLinker.init();
+		initStore("gbif");
 //		initStore("ncbi");
 //		initStore("itis");
-//		DyntaxaLinker.init();
-//		initStore("dynt");
+		DyntaxaLinker.init();
+		initStore("dynt");
 
 	}
 
 	private static void closeStores() {
 		closeStore("wikidata");
 		closeStore("eol");
-//		closeStore("gbif");
+		closeStore("gbif");
+		closeStore("dynt");
 //		closeStore("ncbi");
 //		closeStore("itis");
-//		closeStore("dynt");
+
 	}
 
 }
