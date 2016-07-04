@@ -214,10 +214,10 @@ public class GBIFLinker extends Linker<GBIF> {
 			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID ",
 					gbifItem.getTaxon().parentNameUsageID, true, true, false);
 
-			char endChar = (gbifItem.getVernacularNames() == null) ? '.' : ';';
+			char endChar = (gbifItem.getVernacularNames() == null || gbifItem.getVernacularNames().isEmpty()) ? '.' : ';';
 			w.println("\t\t] " + endChar);
 
-			endChar = (gbifItem.getDistributions() == null) ? '.' : ';';
+			endChar = (gbifItem.getDistributions() == null  || gbifItem.getDistributions().isEmpty() ) ? '.' : ';';
 			int num = 0;
 
 			// Vernacular names node

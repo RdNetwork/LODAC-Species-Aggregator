@@ -173,11 +173,11 @@ public class RdfProcessor implements EntityDocumentProcessor {
 		for (String id : ids.keySet()) {
 			switch (id) {
 			
-			case "eol_ent":
-				EOLLinker linkEOL = new EOLLinker();
-				EOL eolItem = linkEOL.get(Integer.parseInt(ids.get(id)));
-				linkEOL.write(eolItem, storePath + "eol.trig");
-				break;
+//			case "eol_ent":
+//				EOLLinker linkEOL = new EOLLinker();
+//				EOL eolItem = linkEOL.get(Integer.parseInt(ids.get(id)));
+//				linkEOL.write(eolItem, storePath + "eol.trig");
+//				break;
 
 //			case "ncbi":
 //				NCBILinker linkNCBI = new NCBILinker();
@@ -186,26 +186,26 @@ public class RdfProcessor implements EntityDocumentProcessor {
 //				break;
 			
 			
-			case "gbif_ent":
-				GBIFLinker linkGBIF = new GBIFLinker();
-				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
-				linkGBIF.write(gbifItem, storePath + "gbif.trig");
-				break;
-				
-			case "dynt":
-				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
-				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
-				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
-				break;
+//			case "gbif_ent":
+//				GBIFLinker linkGBIF = new GBIFLinker();
+//				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
+//				linkGBIF.write(gbifItem, storePath + "gbif.trig");
+//				break;
+//				
+//			case "dynt":
+//				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
+//				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
+//				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
+//				break;
 
 //			case "feuro":
 //				break;
 				
-//			case "itis":
-//				ITISLinker linkITIS = new ITISLinker();
-//				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
-//				linkITIS.write(itisItem, storePath + "itis.trig");
-//				break;
+			case "itis":
+				ITISLinker linkITIS = new ITISLinker();
+				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
+				linkITIS.write(itisItem, storePath + "itis.trig");
+				break;
 
 			default:
 				break;
@@ -330,23 +330,29 @@ public class RdfProcessor implements EntityDocumentProcessor {
 
 	private static void initStores() {
 		initStore("wikidata");
-		initStore("eol");
-		GBIFLinker.init();
-		initStore("gbif");
+//		initStore("eol");
+		
+//		GBIFLinker.init();
+//		initStore("gbif");
+
+//		NCBILinker.init();
 //		initStore("ncbi");
-//		initStore("itis");
-		DyntaxaLinker.init();
-		initStore("dynt");
+		
+		ITISLinker.init();
+		initStore("itis");
+		
+//		DyntaxaLinker.init();
+//		initStore("dynt");
 
 	}
 
 	private static void closeStores() {
 		closeStore("wikidata");
-		closeStore("eol");
-		closeStore("gbif");
-		closeStore("dynt");
+//		closeStore("eol");
+//		closeStore("gbif");
+//		closeStore("dynt");
 //		closeStore("ncbi");
-//		closeStore("itis");
+		closeStore("itis");
 
 	}
 
