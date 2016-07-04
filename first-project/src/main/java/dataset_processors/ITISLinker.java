@@ -1,122 +1,131 @@
 package dataset_processors;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import org.gbif.dwc.terms.DcTerm;
+import org.gbif.dwc.terms.DwcTerm;
+import org.gbif.dwc.terms.GbifTerm;
+import org.gbif.dwca.io.Archive;
+import org.gbif.dwca.io.ArchiveFactory;
+import org.gbif.dwca.io.UnsupportedArchiveException;
+import org.gbif.dwca.record.Record;
+import org.gbif.dwca.record.StarRecord;
+
 import dataset_models.ITIS;
-import dataset_models.EOL.VernacularName;
-import dataset_models.ITIS.Reference;
-import dataset_models.ITIS.Vernacular;
-import dataset_models.NCBI.Citation;
+import dataset_models.ITIS.Taxon;
+import dataset_models.ITIS.VernacularName;
 import wikidata.examples.ExampleHelpers;
+import wikidata.processors.RdfProcessor;
 
 public class ITISLinker extends Linker<ITIS> {
 
+	/*
 	static final String DB_HOST = ExampleHelpers.loadProp("host");
 	static final String DB_USER = ExampleHelpers.loadProp("user");
 	static final String DB_PASS = ExampleHelpers.loadProp("password");
+	*/
+	
+	public static Archive dwcArchive;
+
+	public static void init() {
+		File myArchiveFile = new File(RdfProcessor.dumpPath + "itis/dwca/");
+		try {
+			dwcArchive = ArchiveFactory.openArchive(myArchiveFile);
+		} catch (UnsupportedArchiveException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public ITIS get(int id) {
 
+		/**
+		 * So far, this method only extracts and uses taxonomy & names values
+		 */
+
 		ITIS entity = new ITIS();
 
-		try {
-			entity.setTsn(id);
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn;
-			conn = DriverManager.getConnection(DB_HOST, DB_USER, DB_PASS);
+		entity.setTsn(id);
 
-			conn.setCatalog("itis");
+		for (StarRecord rec : dwcArchive) {
 
-			String query = "SELECT * FROM taxonomics_units tu "
-					+ "WHERE tu.tsn = ? ;";
-			PreparedStatement prest = conn.prepareStatement(query);
-			prest.setInt(1, id);
+			if (Integer.parseInt(rec.core().id()) == id) {
+				Taxon taxon = entity.new Taxon();
+				ArrayList<VernacularName> vernacularNames = new ArrayList<VernacularName>();
 
-			String vernsQuery = "SELECT * FROM vernaculars vr, vern_ref_links vl, reference_links rf"
-					+ "WHERE vr.tsn = ? " + "AND vr.vern_id = vl.vern_id "
-					+ "AND vl.documentation_id = rf.documentation_id ;";
-			PreparedStatement prestV = conn.prepareStatement(query);
-			prestV.setInt(1, id);
+				// Taxon fields (core)
 
-			String jurisQuery = "SELECT * FROM jurisdction jr "
-					+ "WHERE jr.tsn = ? ;";
-			PreparedStatement prestJ = conn.prepareStatement(query);
-			prestJ.setInt(1, id);
+				taxon.parentNameUsageID = rec.core()
+						.value(DwcTerm.parentNameUsageID);
+				taxon.acceptedNameUsageID = rec.core()
+						.value(DwcTerm.acceptedNameUsageID);
+				taxon.scientificName = rec.core().value(DwcTerm.scientificName);
+				taxon.taxonRank = rec.core().value(DwcTerm.taxonRank);
+				taxon.taxonomicStatus = rec.core().value(DwcTerm.taxonomicStatus);
 
-			String geodivQuery = "SELECT * FROM geographic_div gd "
-					+ "WHERE gd.tsn = ? ;";
-			PreparedStatement prestG = conn.prepareStatement(query);
-			prestG.setInt(1, id);
+				entity.setTaxon(taxon);
 
-			String refsQuery = "SELECT * FROM reference_links rf "
-					+ "WHERE rf.tsn = ? ;";
-			PreparedStatement prestR = conn.prepareStatement(query);
-			prestR.setInt(1, id);
+				// Vernacular names fields
+				if (rec.hasExtension(GbifTerm.VernacularName)) {
+					for (Record extRec : rec.extension(GbifTerm.VernacularName)) {
+						VernacularName vn = entity.new VernacularName();
+						vn.vernacularName = extRec.value(DwcTerm.vernacularName);
+						vn.language = extRec.value(DcTerm.language);
+						vernacularNames.add(vn);
+					}
+					entity.setVernacularNames(vernacularNames);
+				}
 
-			String commentsQuery = "SELECT * FROM comment_links cl, comments cm "
-					+ "WHERE cl.tsn = ? " + "AND cl.comment_id = cm.comment_id ;";
-			PreparedStatement prestC = conn.prepareStatement(query);
-			prestC.setInt(1, id);
-
-			String synsQuery = "SELECT * FROM synonym_links sy "
-					+ "WHERE sy.tsn = ? ;";
-			PreparedStatement prestS = conn.prepareStatement(query);
-			prestS.setInt(1, id);
-
-			String expSubQuery = "SELECT * FROM experts ex, reference_links rf "
-					+ "WHERE doc_id_prefix = expert_id_prefix " + "AND tsn = ?";
-			String pubSubQuery = "SELECT * FROM publications pb, reference_links rf "
-					+ "WHERE doc_id_prefix = publication_id_prefix " + "AND tsn = ?";
-			String srcSubQuery = "SELECT * FROM other_sources os, reference_links rf "
-					+ "WHERE doc_id_prefix = source_id_prefix " + "AND tsn = ?";
-
-			ResultSet rs = prest.executeQuery();
-
-			// Main query
-			while (rs.next()) {
-				String name = rs.getString("unit_name1") + rs.getString("unit_name3")
-						+ rs.getString("unit_name3") + rs.getString("unit_name4");
-				entity.setName(name);
-				entity.setUsage(rs.getString("usage"));
-				entity.setCompletenessRating(rs.getString("completeness_rtng"));
-				entity.setCredibilityRating(rs.getString("credibility_rtng"));
-				entity.setRevisionYear(rs.getString("currency_rating"));
-				entity.setTaxonAuthor(rs.getString("usage"));
-				entity.setKingdom(getKingdomName(rs.getString("kingdom_id")));
-				entity.setTaxonRank(getRankName(rs.getString("rank_id"), entity.getKingdom()));
-				entity.setParentTaxon(rs.getString("parent_tsn"));
-
+				return entity;
 			}
-
-
-			// Vernaculars query
-			rs = prestV.executeQuery();
-			ArrayList<Vernacular> verns = new ArrayList<Vernacular>();
-			while (rs.next()) {
-				verns.add(entity.fillVernacular(rs));
-			}
-			entity.setVernaculars(verns);
-
-			conn.close();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
+		/*
+		 * try { entity.setTsn(id); Class.forName("com.mysql.jdbc.Driver");
+		 * Connection conn; conn = DriverManager.getConnection(DB_HOST, DB_USER,
+		 * DB_PASS);
+		 * 
+		 * conn.setCatalog("itis");
+		 * 
+		 * String query =
+		 * "SELECT * FROM taxonomics_units tu, taxon_authors_lkp ta" +
+		 * "WHERE tu.tsn = ? " + "AND tu.taxon_author_id = ta.taxon_author_id ;"
+		 * ; PreparedStatement prest = conn.prepareStatement(query);
+		 * prest.setInt(1, id);
+		 * 
+		 * 
+		 * ResultSet rs = prest.executeQuery();
+		 * 
+		 * // Main query while (rs.next()) { String name =
+		 * rs.getString("unit_name1") + rs.getString("unit_name3") +
+		 * rs.getString("unit_name3") + rs.getString("unit_name4");
+		 * entity.setName(name); entity.setUsage(rs.getString("usage"));
+		 * entity.setCompletenessRating(rs.getString("completeness_rtng"));
+		 * entity.setCredibilityRating(rs.getString("credibility_rtng"));
+		 * entity.setRevisionYear(rs.getString("currency_rating"));
+		 * entity.setTaxonAuthor(rs.getString("usage"));
+		 * entity.setKingdom(getKingdomName(rs.getString("kingdom_id")));
+		 * entity.setTaxonRank(getRankName(rs.getString("rank_id"),
+		 * entity.getKingdom()));
+		 * entity.setParentTaxon(rs.getString("parent_tsn"));
+		 * 
+		 * }
+		 * 
+		 * conn.close();
+		 * 
+		 * } catch (SQLException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } catch (ClassNotFoundException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 * 
+		 */
 		return entity;
 	}
-
-	
 
 	private String getRankName(String rank, String kingdom) {
 		switch (rank) {
@@ -161,11 +170,11 @@ public class ITISLinker extends Linker<ITIS> {
 
 		case "45":
 			switch (kingdom) {
-			case "Protozoa" :
-			case "Animalia" :
+			case "Protozoa":
+			case "Animalia":
 				return "Infraphylum";
-			case "Plantae" :
-			case "Chromista" :
+			case "Plantae":
+			case "Chromista":
 				return "Infradivision";
 			default:
 				break;
@@ -202,7 +211,7 @@ public class ITISLinker extends Linker<ITIS> {
 		case "120":
 			switch (kingdom) {
 			case "Animalia":
-			case "Protozoa" :
+			case "Protozoa":
 			case "Bacteria":
 				return "Infraorder";
 			default:
@@ -218,11 +227,11 @@ public class ITISLinker extends Linker<ITIS> {
 			if (kingdom.equals("Animalia")) {
 				return "Subsection";
 			}
-			break;			
+			break;
 		case "130":
 			switch (kingdom) {
 			case "Animalia":
-			case "Protozoa" :
+			case "Protozoa":
 			case "Bacteria":
 				return "Superfamily";
 			default:
@@ -244,7 +253,7 @@ public class ITISLinker extends Linker<ITIS> {
 		case "200":
 			switch (kingdom) {
 			case "Plantae":
-			case "Chromista" :
+			case "Chromista":
 			case "Fungi":
 				return "Section";
 			default:
@@ -254,7 +263,7 @@ public class ITISLinker extends Linker<ITIS> {
 		case "210":
 			switch (kingdom) {
 			case "Plantae":
-			case "Chromista" :
+			case "Chromista":
 			case "Fungi":
 				return "Subsection";
 			default:
@@ -353,9 +362,56 @@ public class ITISLinker extends Linker<ITIS> {
 	}
 
 	@Override
-	public void write(ITIS itisItem, String storePath) {
-		// TODO
-	}
+	public void write(ITIS itisItem, String path) {
+		try (OutputStreamWriter osw = new OutputStreamWriter(
+				new FileOutputStream(path, true), "UTF-8");
+				BufferedWriter bw = new BufferedWriter(osw);
+				PrintWriter w = new PrintWriter(bw)) {
 
+			w.println("\titis:" + itisItem.getTsn());
+
+			// Taxon node
+			w.println("\t\tdwc:Taxon [");
+			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID",
+					itisItem.getTaxon().parentNameUsageID, true, false, false);
+			Linker.printPropertyValue(w, 3, "dwc:acceptedNameUsageID",
+					itisItem.getTaxon().acceptedNameUsageID, true, false, false);
+			Linker.printPropertyValue(w, 3, "dwc:scientificName",
+					itisItem.getTaxon().scientificName, true, false, false);
+			Linker.printPropertyValue(w, 3, "dwc:taxonRank",
+					itisItem.getTaxon().taxonRank, true, false, false);
+
+			Linker.printPropertyValue(w, 3, "dwc:taxonomicStatus",
+					itisItem.getTaxon().taxonomicStatus, true, false, false);
+			Linker.printPropertyValue(w, 3, "dwc:taxonRank",
+					itisItem.getTaxon().taxonRank, true, false, false);
+			Linker.printPropertyValue(w, 3, "dwc:parentNameUsageID ",
+					itisItem.getTaxon().parentNameUsageID, true, true, false);
+
+			char endChar = (itisItem.getVernacularNames() == null || itisItem.getVernacularNames().isEmpty()) ? '.' : ';';
+			w.println("\t\t] " + endChar);
+
+			int num = 0;
+
+			// Vernacular names node
+			if (itisItem.getVernacularNames() != null) {
+				for (VernacularName vn : itisItem.getVernacularNames()) {
+					num++;
+					w.println("\t\tgbif:vernacularName [");
+					Linker.printPropertyValue(w, 3, "dwc:vernacularName",
+							vn.vernacularName, true, false, false);
+					Linker.printPropertyValue(w, 3, "dc:language", vn.language, true,
+							true, false);
+
+					boolean last = (num == itisItem.getVernacularNames().size());
+					w.println("\t\t] " + (last ? '.' : ';'));
+				}
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

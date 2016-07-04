@@ -1,14 +1,55 @@
 package dataset_models;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-
-import dataset_models.ITIS.Reference;
-import dataset_models.ITIS.Vernacular;
 
 public class ITIS {
 
+	
+	// Darwin Core model
+	public int tsn;
+	Taxon taxon;
+	ArrayList<VernacularName> vernacularNames;
+	
+	public class VernacularName {
+		public String vernacularName;
+		public String language;
+	}
+	
+	public class Taxon {
+		public String parentNameUsageID;
+		public String acceptedNameUsageID;
+		public String scientificName;
+		public String completeName;
+		public String taxonomicStatus;
+		public String taxonRank;
+	}
+
+	public int getTsn() {
+		return tsn;
+	}
+
+	public void setTsn(int tsn) {
+		this.tsn = tsn;
+	}
+
+	public Taxon getTaxon() {
+		return taxon;
+	}
+
+	public void setTaxon(Taxon taxon) {
+		this.taxon = taxon;
+	}
+
+	public ArrayList<VernacularName> getVernacularNames() {
+		return vernacularNames;
+	}
+
+	public void setVernacularNames(ArrayList<VernacularName> vernacularNames) {
+		this.vernacularNames = vernacularNames;
+	}
+	
+	// SQL Model
+	/*
 	public class Vernacular {
 		public String name;
 		public String language;
@@ -81,113 +122,11 @@ public class ITIS {
 	ArrayList<GeographicDivision> geoDivisions;
 	ArrayList<Integer> synonyms;
 	ArrayList<Reference> references;
+	*/
 	
 	
-	public int getTsn() {
-		return tsn;
-	}
-	public void setTsn(int tsn) {
-		this.tsn = tsn;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getUsage() {
-		return usage;
-	}
-	public void setUsage(String usage) {
-		this.usage = usage;
-	}
-
-	public String getCredibilityRating() {
-		return credibilityRating;
-	}
-	public void setCredibilityRating(String credibilityRating) {
-		this.credibilityRating = credibilityRating;
-	}
-	public String getCompletenessRating() {
-		return completenessRating;
-	}
-	public void setCompletenessRating(String completenessRating) {
-		this.completenessRating = completenessRating;
-	}
-	public String getRevisionYear() {
-		return revisionYear;
-	}
-	public void setRevisionYear(String revisionYear) {
-		this.revisionYear = revisionYear;
-	}
-	public String getTaxonAuthor() {
-		return taxonAuthor;
-	}
-	public void setTaxonAuthor(String taxonAuthor) {
-		this.taxonAuthor = taxonAuthor;
-	}
-	public String getKingdom() {
-		return kingdom;
-	}
-	public void setKingdom(String kingdom) {
-		this.kingdom = kingdom;
-	}
-	public String getTaxonRank() {
-		return taxonRank;
-	}
-	public void setTaxonRank(String taxonRank) {
-		this.taxonRank = taxonRank;
-	}
-	public String getParentTaxon() {
-		return parentTaxon;
-	}
-	public void setParentTaxon(String parentTaxon) {
-		this.parentTaxon = parentTaxon;
-	}
-	public ArrayList<String> getPhylogeny() {
-		return phylogeny;
-	}
-	public void setPhylogeny(ArrayList<String> phylogeny) {
-		this.phylogeny = phylogeny;
-	}
-	public ArrayList<Vernacular> getVernaculars() {
-		return vernaculars;
-	}
-	public void setVernaculars(ArrayList<Vernacular> vernaculars) {
-		this.vernaculars = vernaculars;
-	}
-	public ArrayList<Comment> getComments() {
-		return comments;
-	}
-	public void setComments(ArrayList<Comment> comments) {
-		this.comments = comments;
-	}
-	public ArrayList<Jurisdiction> getJurisdictions() {
-		return jurisdictions;
-	}
-	public void setJurisdictions(ArrayList<Jurisdiction> jurisdictions) {
-		this.jurisdictions = jurisdictions;
-	}
-	public ArrayList<GeographicDivision> getGeoDivisions() {
-		return geoDivisions;
-	}
-	public void setGeoDivisions(ArrayList<GeographicDivision> geoDivisions) {
-		this.geoDivisions = geoDivisions;
-	}
-	public ArrayList<Integer> getSynonyms() {
-		return synonyms;
-	}
-	public void setSynonyms(ArrayList<Integer> synonyms) {
-		this.synonyms = synonyms;
-	}
-	public ArrayList<Reference> getReferences() {
-		return references;
-	}
-	public void setReferences(ArrayList<Reference> references) {
-		this.references = references;
-	}
 	
-	
+	/*
 	public Vernacular fillVernacular(ResultSet rs) {
 		Vernacular v = new Vernacular();
 		
@@ -234,6 +173,6 @@ public class ITIS {
 		
 		return refs;
 	}
-	
+	*/
 	
 }
