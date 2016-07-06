@@ -270,11 +270,7 @@ public class GBIFLinker extends Linker<GBIF> {
 					Linker.printPropertyValue(w, 3, "dwc:occurrenceStatus",
 							d.occurrenceStatus, true, true, false);
 
-					if (num == gbifItem.getMultimediaFiles().size()) {
-						endChar = '.';
-					} else {
-						endChar = ';';
-					}
+
 					w.println("\t\t] " + endChar);
 				}
 			}
@@ -308,8 +304,10 @@ public class GBIFLinker extends Linker<GBIF> {
 					Linker.printPropertyValue(w, 3, "dc:rightsHolder",
 							m.rightsHolder, true, true, false);
 
-					if (num == gbifItem.getReferences().size()) {
-						endChar = '.';
+					if (num == gbifItem.getMultimediaFiles().size()) {
+						if (gbifItem.getReferences() == null || gbifItem.getReferences().size() == 0) {
+							endChar = '.';
+						}
 					} else {
 						endChar = ';';
 					}

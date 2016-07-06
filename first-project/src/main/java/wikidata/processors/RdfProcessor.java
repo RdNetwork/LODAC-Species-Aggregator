@@ -1,5 +1,7 @@
 package wikidata.processors;
 
+
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -178,7 +180,7 @@ public class RdfProcessor implements EntityDocumentProcessor {
 //				EOL eolItem = linkEOL.get(Integer.parseInt(ids.get(id)));
 //				linkEOL.write(eolItem, storePath + "eol.trig");
 //				break;
-
+//
 //			case "ncbi":
 //				NCBILinker linkNCBI = new NCBILinker();
 //				NCBI ncbiItem = linkNCBI.get(Integer.parseInt(ids.get(id)));
@@ -186,26 +188,26 @@ public class RdfProcessor implements EntityDocumentProcessor {
 //				break;
 			
 			
-//			case "gbif_ent":
-//				GBIFLinker linkGBIF = new GBIFLinker();
-//				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
-//				linkGBIF.write(gbifItem, storePath + "gbif.trig");
-//				break;
+			case "gbif_ent":
+				GBIFLinker linkGBIF = new GBIFLinker();
+				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
+				linkGBIF.write(gbifItem, storePath + "gbif.trig");
+				break;
 //				
 //			case "dynt":
 //				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
 //				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
 //				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
 //				break;
-
-//			case "feuro":
+//
+////			case "feuro":
+////				break;
+//				
+//			case "itis":
+//				ITISLinker linkITIS = new ITISLinker();
+//				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
+//				linkITIS.write(itisItem, storePath + "itis.trig");
 //				break;
-				
-			case "itis":
-				ITISLinker linkITIS = new ITISLinker();
-				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
-				linkITIS.write(itisItem, storePath + "itis.trig");
-				break;
 
 			default:
 				break;
@@ -330,17 +332,17 @@ public class RdfProcessor implements EntityDocumentProcessor {
 
 	private static void initStores() {
 		initStore("wikidata");
+		
 //		initStore("eol");
 		
-//		GBIFLinker.init();
-//		initStore("gbif");
+		GBIFLinker.init();
+		initStore("gbif");
 
-//		NCBILinker.init();
 //		initStore("ncbi");
-		
-		ITISLinker.init();
-		initStore("itis");
-		
+//		
+//		ITISLinker.init();
+//		initStore("itis");
+//		
 //		DyntaxaLinker.init();
 //		initStore("dynt");
 
@@ -349,10 +351,10 @@ public class RdfProcessor implements EntityDocumentProcessor {
 	private static void closeStores() {
 		closeStore("wikidata");
 //		closeStore("eol");
-//		closeStore("gbif");
+		closeStore("gbif");
 //		closeStore("dynt");
 //		closeStore("ncbi");
-		closeStore("itis");
+//		closeStore("itis");
 
 	}
 
