@@ -217,7 +217,8 @@ public class GBIFLinker extends Linker<GBIF> {
 			char endChar = (gbifItem.getVernacularNames() == null || gbifItem.getVernacularNames().isEmpty()) ? '.' : ';';
 			w.println("\t\t] " + endChar);
 
-			endChar = (gbifItem.getDistributions() == null  || gbifItem.getDistributions().isEmpty() ) ? '.' : ';';
+			endChar = (gbifItem.getDistributions() == null  || gbifItem.getDistributions().isEmpty()) 
+					&& (gbifItem.getMultimediaFiles() == null  || gbifItem.getMultimediaFiles().isEmpty()) ? '.' : ';';
 			int num = 0;
 
 			// Vernacular names node

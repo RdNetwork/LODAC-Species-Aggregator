@@ -126,7 +126,7 @@ public class NCBILinker extends Linker<NCBI> {
 				BufferedWriter bw = new BufferedWriter(osw);
 				PrintWriter w = new PrintWriter(bw)) {
 
-			String entity = "ncbi:" + NCBIItem.getId();
+			String entity = "ncbi_ent:" + NCBIItem.getId();
 
 			w.println("\t" + entity);
 			Linker.printPropertyValue(w, 2, "ncbi:scientificName",

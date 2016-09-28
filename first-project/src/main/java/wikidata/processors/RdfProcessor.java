@@ -54,7 +54,8 @@ public class RdfProcessor implements EntityDocumentProcessor {
 	static Dataset dataset;
 	public final static String storePath = "rdf/store/";
 	public final static String dumpPath = ExampleHelpers.loadProp("dumplocation"); 
-	int progress = 0, progressBio = 0;
+	int progress = 0;
+	static int progressBio = 0;
 
 
 	/**
@@ -157,9 +158,11 @@ public class RdfProcessor implements EntityDocumentProcessor {
 			String wd) {
 		// TODO Auto-generated method stub
 		int i = 0;
+		
+		Linker.printPropertyValue(writer, 2, "rdf:type", "lodac:Taxon", false, externalIds.isEmpty(), false);
+		
 		for (String dataset : externalIds.keySet()) {
 			i++;
-
 			Linker.printPropertyValue(writer, 2, "owl:sameAs",
 					dataset + ":" + externalIds.get(dataset), false, 
 					(i == externalIds.size()), true);
@@ -175,17 +178,17 @@ public class RdfProcessor implements EntityDocumentProcessor {
 		for (String id : ids.keySet()) {
 			switch (id) {
 			
-//			case "eol_ent":
-//				EOLLinker linkEOL = new EOLLinker();
-//				EOL eolItem = linkEOL.get(Integer.parseInt(ids.get(id)));
-//				linkEOL.write(eolItem, storePath + "eol.trig");
-//				break;
-//
-//			case "ncbi":
-//				NCBILinker linkNCBI = new NCBILinker();
-//				NCBI ncbiItem = linkNCBI.get(Integer.parseInt(ids.get(id)));
-//				linkNCBI.write(ncbiItem, storePath + "ncbi.trig");
-//				break;
+			case "eol_ent":
+				EOLLinker linkEOL = new EOLLinker();
+				EOL eolItem = linkEOL.get(Integer.parseInt(ids.get(id)));
+				linkEOL.write(eolItem, storePath + "eol.trig");
+				break;
+
+			case "ncbi_ent":
+				NCBILinker linkNCBI = new NCBILinker();
+				NCBI ncbiItem = linkNCBI.get(Integer.parseInt(ids.get(id)));
+				linkNCBI.write(ncbiItem, storePath + "ncbi.trig");
+				break;
 			
 			
 			case "gbif_ent":
@@ -193,21 +196,18 @@ public class RdfProcessor implements EntityDocumentProcessor {
 				GBIF gbifItem = linkGBIF.get(Integer.parseInt(ids.get(id)));
 				linkGBIF.write(gbifItem, storePath + "gbif.trig");
 				break;
-//				
-//			case "dynt":
-//				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
-//				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
-//				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
-//				break;
-//
-////			case "feuro":
-////				break;
-//				
-//			case "itis":
-//				ITISLinker linkITIS = new ITISLinker();
-//				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
-//				linkITIS.write(itisItem, storePath + "itis.trig");
-//				break;
+				
+			case "dynt":
+				DyntaxaLinker linkDyntaxa = new DyntaxaLinker();
+				Dyntaxa dyntaxaItem = linkDyntaxa.get(Integer.parseInt(ids.get(id)));
+				linkDyntaxa.write(dyntaxaItem, storePath + "dynt.trig");
+				break;
+				
+			case "itis":
+				ITISLinker linkITIS = new ITISLinker();
+				ITIS itisItem = linkITIS.get(Integer.parseInt(ids.get(id)));
+				linkITIS.write(itisItem, storePath + "itis.trig");
+				break;
 
 			default:
 				break;
@@ -301,7 +301,8 @@ public class RdfProcessor implements EntityDocumentProcessor {
 			writer.println("@prefix eol_ent: <http://www.eol.org/pages/> .");
 			writer.println("@prefix eol: <http://eol.org/schema/> .");
 			writer.println("@prefix itis: <http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=> .");
-			writer.println("@prefix ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=> .");
+			writer.println("@prefix ncbi_ent: <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=> .");
+			writer.println("@prefix ncbi: <https://www.ncbi.nlm.nih.gov/taxonomy/terms#> .");
 			writer.println("@prefix dwc: <http://rs.tdwg.org/dwc/terms/> .");
 			writer.println("@prefix dc: <http://purl.org/dc/terms/> .");
 			writer.println("@prefix iucn: <http://iucn.org/terms/> .");
@@ -333,28 +334,28 @@ public class RdfProcessor implements EntityDocumentProcessor {
 	private static void initStores() {
 		initStore("wikidata");
 		
-//		initStore("eol");
+		initStore("eol");
 		
 		GBIFLinker.init();
 		initStore("gbif");
 
-//		initStore("ncbi");
-//		
-//		ITISLinker.init();
-//		initStore("itis");
-//		
-//		DyntaxaLinker.init();
-//		initStore("dynt");
+		initStore("ncbi");
+		
+		ITISLinker.init();
+		initStore("itis");
+		
+		DyntaxaLinker.init();
+		initStore("dynt");
 
 	}
 
 	private static void closeStores() {
 		closeStore("wikidata");
-//		closeStore("eol");
+		closeStore("eol");
 		closeStore("gbif");
-//		closeStore("dynt");
-//		closeStore("ncbi");
-//		closeStore("itis");
+		closeStore("dynt");
+		closeStore("ncbi");
+		closeStore("itis");
 
 	}
 
